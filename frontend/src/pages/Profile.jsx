@@ -188,7 +188,7 @@ const Profile = () => {
 
   if (loading) return <LoadingSpinner message="Loading Profile..." />;
 
-  const supportLink = `https://tsb.com/${profile.username}`;
+  const supportLink = `https://tsb-blue.vercel.app/${profile.username}`;
   const inputClass =
     "w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors";
   const labelClass = "block text-sm font-medium text-gray-300 mb-2";

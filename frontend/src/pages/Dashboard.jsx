@@ -16,6 +16,7 @@ const Dashboard = () => {
     const saved = localStorage.getItem("tsb_timeRange");
     return saved ? saved : "month";
   });
+  const [copied, setCopied] = useState(false);
 
   const [stats, setStats] = useState({
     todayEarnings: 0,
@@ -54,9 +55,16 @@ const Dashboard = () => {
     localStorage.setItem("tsb_timeRange", timeRange);
   }, [timeRange]);
 
+  const copySupportLink = () => {
+    navigator.clipboard.writeText(
+      `https://tsb-blue.vercel.app/${creator.username}`,
+    );
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (loading) return <LoadingSpinner message="Loading Dashboard..." />;
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -339,6 +347,42 @@ const Dashboard = () => {
             ))}
           </div>
 
+          {/* ===== SUPPORT LINK CARD ===== */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  🔗 Your Support Link
+                </h3>
+                <p className="text-gray-400 text-sm">
+                  Share this link everywhere to receive support
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <code className="bg-gray-900/50 px-4 py-2 rounded-lg text-purple-400 text-sm">
+                  tsb-blue.vercel.app/{creator.username}
+                </code>
+                <button
+                  onClick={copySupportLink}
+                  className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  {copied ? "✅ Copied!" : "📋 Copy"}
+                </button>
+                <a
+                  href={`https://tsb-blue.vercel.app/${creator.username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white hover:bg-gray-700 transition-colors text-sm font-medium flex items-center gap-2"
+                >
+                  👁️ Preview Page
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Earnings Chart & Recent Supporters */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <motion.div
@@ -408,7 +452,6 @@ const Dashboard = () => {
                   View All →
                 </Link>
               </div>
-
               {stats.recentSupporters.length === 0 ? (
                 <div className="text-center py-8">
                   <span className="text-4xl mb-3 block">💝</span>
@@ -456,6 +499,7 @@ const Dashboard = () => {
             </motion.div>
           </div>
 
+          {/* Support History CTA */}
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
