@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://tsb-api.onrender.com/api";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);

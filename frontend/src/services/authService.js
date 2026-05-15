@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://tsb-api.onrender.com/api/auth";
 
 // Register new creator
 export const registerCreator = async (data) => {

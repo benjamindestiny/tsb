@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://tsb-api.onrender.com/api";
 
 const CreatorPage = () => {
   const { username } = useParams();
