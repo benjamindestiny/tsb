@@ -13,7 +13,6 @@ import VerifyEmail from "./pages/VerifyEmail";
 import CreatorPage from "./pages/CreatorPage";
 import HowItWorks from "./pages/HowItWorks";
 
-
 function App() {
   return (
     <Routes>
@@ -23,13 +22,14 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/withdraw" element={<Withdraw />} />
       <Route path="/how-it-works" element={<HowItWorks />} />
-      <Route path="/creator-profile" element={<CreatorPage />} />
       <Route path="/earnings" element={<Earnings />} />
       <Route path="/verify-email/:token" element={<VerifyEmail />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/supporter-history" element={<SupporterHistory />} />
       <Route path="/about" element={<About />} />
+      {/* Dynamic creator route MUST be LAST */}
+      <Route path="/:username" element={<CreatorPage />} />
     </Routes>
   );
 }
