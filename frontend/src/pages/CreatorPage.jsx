@@ -160,25 +160,7 @@ const CreatorPage = () => {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => window.history.back()}
-              className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700/50 transition-colors"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
+          <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="/logo.png"
@@ -452,11 +434,11 @@ const CreatorPage = () => {
                 <button
                   onClick={() => {
                     setShowSuccessPopup(false);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    setShowPayment(true);
                   }}
                   className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-medium"
                 >
-                  Continue Browsing
+                  Support Again 💜
                 </button>
               </div>
             </motion.div>
