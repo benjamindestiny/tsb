@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "https://tsb-api.onrender.com/api";
+  import.meta.env.VITE_API_URL || "https://tsb-taln.onrender.com/api";
 const MINIMUM_WITHDRAWAL = 3000;
 const QUICK_AMOUNTS = [3000, 5000, 10000];
 

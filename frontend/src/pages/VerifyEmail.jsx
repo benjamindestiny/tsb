@@ -6,7 +6,7 @@ import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 
-const API_URL = "https://tsb-api.onrender.com/api/auth";
+const API_URL = "https://tsb-taln.onrender.com/api/auth";
 
 const VerifyEmail = () => {
   const [loading, setLoading] = useState(true);

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-const API_URL = "https://tsb-api.onrender.com/api";
+const API_URL = "https://tsb-taln.onrender.com/api";
 const PAYSTACK_PUBLIC_KEY = "pk_test_c4249d32e96c4e4f833c41152da9fec5c4e8fb0d";
 
 const CreatorPage = () => {

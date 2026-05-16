@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "https://tsb-api.onrender.com/api";
+const API_URL = "https://tsb-taln.onrender.com/api";
 
 const fadeIn = {
   initial: { opacity: 0, y: 10 },
