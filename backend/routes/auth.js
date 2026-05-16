@@ -13,50 +13,51 @@ router.post("/register", async (req, res) => {
     // Check if user exists
     const existing = await Creator.findOne({ $or: [{ email }, { username }] });
     if (existing) {
-      return res.status(400).json({ error: "Username or email already exists" });
+      return res
+        .status(400)
+        .json({ error: "Username or email already exists" });
     }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Generate verification token
+    // Generate verification token (still create but mark as verified)
     const verificationToken = crypto.randomBytes(32).toString("hex");
-    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // Create creator (unverified)
+    // Create creator (AUTO-VERIFIED for now)
     const creator = await Creator.create({
       username,
       email,
       password: hashedPassword,
       displayName,
-      isVerified: false,
+      isVerified: true, // AUTO-VERIFY
       verificationToken,
-      verificationTokenExpires,
+      verificationTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    // Send verification email in background
+    // Try to send verification email in background (won't block registration)
     sendVerificationEmail(creator, verificationToken).catch((err) => {
       console.log("Verification email failed:", err.message);
     });
 
-    // Generate temporary token (valid for 1 hour, can only access verify page)
+    // Generate full access token immediately
     const token = jwt.sign(
-      { id: creator._id, verified: false },
+      { id: creator._id, verified: true },
       process.env.JWT_SECRET || "secret123",
-      { expiresIn: "1h" },
+      { expiresIn: "30d" },
     );
 
     res.status(201).json({
       success: true,
-      message: "Account created! Check your email to verify your account.",
+      message: "Account created successfully!",
       token,
       creator: {
         id: creator._id,
         username: creator.username,
         email: creator.email,
         displayName: creator.displayName,
-        isVerified: false,
+        isVerified: true,
       },
     });
   } catch (error) {
@@ -76,7 +77,9 @@ router.get("/verify-email/:token", async (req, res) => {
     });
 
     if (!creator) {
-      return res.status(400).json({ error: "Invalid or expired verification link" });
+      return res
+        .status(400)
+        .json({ error: "Invalid or expired verification link" });
     }
 
     creator.isVerified = true;
@@ -84,27 +87,11 @@ router.get("/verify-email/:token", async (req, res) => {
     creator.verificationTokenExpires = null;
     await creator.save();
 
-    // Generate full access token
-    const authToken = jwt.sign(
-      { id: creator._id, verified: true },
-      process.env.JWT_SECRET || "secret123",
-      { expiresIn: "30d" },
-    );
-
     res.json({
       success: true,
       message: "Email verified successfully! Welcome to TSB!",
-      token: authToken,
-      creator: {
-        id: creator._id,
-        username: creator.username,
-        email: creator.email,
-        displayName: creator.displayName,
-        isVerified: true,
-      },
     });
   } catch (error) {
-    console.error("VERIFICATION ERROR:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -116,13 +103,16 @@ router.post("/resend-verification", async (req, res) => {
 
     const creator = await Creator.findOne({ email, isVerified: false });
     if (!creator) {
-      return res.status(400).json({ error: "No unverified account found with this email" });
+      return res
+        .status(400)
+        .json({ error: "No unverified account found with this email" });
     }
 
-    // Generate new token
     const verificationToken = crypto.randomBytes(32).toString("hex");
     creator.verificationToken = verificationToken;
-    creator.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    creator.verificationTokenExpires = new Date(
+      Date.now() + 24 * 60 * 60 * 1000,
+    );
     await creator.save();
 
     sendVerificationEmail(creator, verificationToken).catch((err) => {
@@ -146,8 +136,9 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, creator.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
+    // Verification check disabled - users can login without email verification
     // if (!creator.isVerified) {
-    //   return res.status(403).json({ 
+    //   return res.status(403).json({
     //     error: "Please verify your email before logging in",
     //     needsVerification: true,
     //     email: creator.email,
