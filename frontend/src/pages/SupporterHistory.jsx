@@ -1,19 +1,49 @@
+// SupporterHistory.jsx
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
+import axios from "axios";
+
+const API_URL = "https://tsb-taln.onrender.com/api";
 
 const SupporterHistory = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [supporters] = useState([]);
+  const [supporters, setSupporters] = useState([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
+    fetchSupporters();
   }, []);
+
+  const fetchSupporters = async () => {
+    try {
+      const token = localStorage.getItem("tsb_token");
+      const { data } = await axios.get(`${API_URL}/donations/my-supporters`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data.success) {
+        // Map donations to the format this page expects
+        const mapped = data.donations.map((d) => ({
+          id: d._id,
+          name: d.donorName,
+          email: d.donorEmail,
+          amount: d.amount,
+          message: d.message,
+          anonymous: d.isAnonymous,
+          date: d.createdAt,
+          paymentMethod: d.paymentMethod,
+        }));
+        setSupporters(mapped);
+      }
+    } catch (err) {
+      console.log("Failed to fetch supporters");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <LoadingSpinner message="Loading Support History..." />;
 
@@ -153,11 +183,11 @@ const SupporterHistory = () => {
               No supporters found
             </h3>
             <p className="text-gray-400">
-              Try adjusting your search or filters
+              Share your support link to start receiving support!
             </p>
           </motion.div>
         ) : (
-          <div className="hidden md:block bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden">
+          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-700">
