@@ -1,7 +1,7 @@
 // CreatorPage.jsx
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 
@@ -22,6 +22,8 @@ const CreatorPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [donationDetails, setDonationDetails] = useState(null);
 
   const quickAmounts = [3000, 5000, 10000, 20000];
 
@@ -82,7 +84,6 @@ const CreatorPage = () => {
         ],
       },
       callback: function (response) {
-        // Payment successful - verify on backend
         verifyPayment(response.reference);
       },
       onClose: function () {
@@ -110,9 +111,8 @@ const CreatorPage = () => {
       });
 
       if (data.success) {
-        setSuccessMessage(
-          `Thank you for your support! 🎉\nYour ₦${Number(supportAmount).toLocaleString()} has been received.`,
-        );
+        setDonationDetails(data.donation);
+        setShowSuccessPopup(true);
         setShowPayment(false);
         setSupportAmount("");
         setMessage("");
@@ -120,7 +120,9 @@ const CreatorPage = () => {
         setError("Payment verification failed. Please contact support.");
       }
     } catch (err) {
-      setError("Verification failed. Don't worry, your payment is safe.");
+      setError(
+        "Verification failed. Don't worry, your payment is safe - we'll process it shortly.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -146,14 +148,34 @@ const CreatorPage = () => {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img
-              src="/logo.png"
-              alt="TSB"
-              className="w-10 h-10 object-contain"
-            />
-            <span className="text-white font-bold">TSB</span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => window.history.back()}
+              className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700/50 transition-colors"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <Link to="/" className="flex items-center gap-2">
+              <img
+                src="/logo.png"
+                alt="TSB"
+                className="w-10 h-10 object-contain"
+              />
+              <span className="text-white font-bold">TSB</span>
+            </Link>
+          </div>
 
           {loggedInUser ? (
             <Link
@@ -320,7 +342,6 @@ const CreatorPage = () => {
               />
             </div>
 
-            {/* Payment badges */}
             <div className="flex items-center justify-center gap-2 mb-4">
               <span className="text-gray-500 text-xs">Secured by</span>
               <span className="text-green-400 font-bold text-sm">Paystack</span>
@@ -349,6 +370,89 @@ const CreatorPage = () => {
         )}
       </div>
 
+      {/* Success Popup Modal */}
+      <AnimatePresence>
+        {showSuccessPopup && donationDetails && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                className="w-20 h-20 bg-green-500/20 border-2 border-green-500/50 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <span className="text-5xl">🎉</span>
+              </motion.div>
+
+              <h2 className="text-2xl font-bold text-white mb-2">Thank You!</h2>
+              <p className="text-green-400 text-lg font-semibold mb-4">
+                ₦{donationDetails.amount.toLocaleString()}
+              </p>
+
+              {!donationDetails.isAnonymous && (
+                <p className="text-gray-300 mb-2">
+                  From:{" "}
+                  <span className="text-white font-medium">
+                    {donationDetails.supporterName}
+                  </span>
+                </p>
+              )}
+              {donationDetails.supporterEmail &&
+                !donationDetails.isAnonymous && (
+                  <p className="text-gray-400 text-sm mb-2">
+                    {donationDetails.supporterEmail}
+                  </p>
+                )}
+              {donationDetails.message && (
+                <div className="bg-gray-700/30 rounded-xl p-3 mb-4">
+                  <p className="text-gray-400 text-sm italic">
+                    "{donationDetails.message}"
+                  </p>
+                </div>
+              )}
+
+              <p className="text-gray-300 mb-6">
+                Your support means the world to{" "}
+                <strong className="text-purple-400">
+                  {creator?.displayName || creator?.username}
+                </strong>
+                ! 💜
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowSuccessPopup(false)}
+                  className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-medium hover:bg-gray-600 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSuccessPopup(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-medium"
+                >
+                  Continue Browsing
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* TSB Branding */}
       <div className="text-center pb-8">
         <p className="text-gray-600 text-sm">
           Powered by{" "}

@@ -17,6 +17,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/donations", require("./routes/donations"));
 app.use("/api/creator", require("./routes/creator"));
 app.use("/api/withdrawals", require("./routes/withdrawals"));
+app.use("/api/payments", require("./routes/payments"));
 
 app.get("/", (req, res) => {
   res.json({ message: "tsb Server is running!", status: "success" });
