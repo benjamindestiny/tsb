@@ -159,7 +159,7 @@ const CreatorPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-2">
               <img
@@ -195,7 +195,7 @@ const CreatorPage = () => {
       </div>
 
       {/* Creator Profile */}
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center">
+      <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 text-center">
         <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold mb-4">
           {(creator.displayName || creator.username || "?")
             .charAt(0)
@@ -246,7 +246,7 @@ const CreatorPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowPayment(true)}
-            className="px-10 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold rounded-2xl text-xl shadow-lg"
+            className="px-6 md:px-10 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold rounded-2xl text-xl shadow-lg"
           >
             ☕ Support Me
           </motion.button>

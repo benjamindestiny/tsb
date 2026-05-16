@@ -159,11 +159,11 @@ const Withdraw = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 md:p-6">
       <motion.div {...fadeIn} className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Withdraw Earnings</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">Withdraw Earnings</h1>
             <p className="text-gray-400 mt-1">
               Transfer your earnings to your bank account
             </p>
@@ -176,11 +176,11 @@ const Withdraw = () => {
           </button>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8">
+        <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-4 md:p-8">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-sm mb-1">Available Balance</p>
-              <h2 className="text-4xl font-bold text-white">
+              <h2 className="text-3xl md:text-4xl font-bold text-white">
                 ₦{balance.toLocaleString()}
               </h2>
               <p className="text-gray-400 text-sm mt-2">
@@ -204,7 +204,7 @@ const Withdraw = () => {
           </p>
         </div>
 
-        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
           <h3 className="text-xl font-semibold text-white mb-6">
             Request Withdrawal
           </h3>
@@ -388,7 +388,7 @@ const Withdraw = () => {
           </button>
         </div>
 
-        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+        <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
           <h3 className="text-xl font-semibold text-white mb-6">
             Withdrawal History
           </h3>
@@ -437,7 +437,7 @@ const Withdraw = () => {
             {...fadeIn}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
-            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full">
+            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-4 md:p-6 max-w-md w-full">
               <h3 className="text-xl font-bold text-white mb-4">
                 Confirm Withdrawal
               </h3>

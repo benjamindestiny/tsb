@@ -46,7 +46,7 @@ const VerifyEmail = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 max-w-md w-full text-center border border-gray-700/50"
+        className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 md:p-8 max-w-md w-full text-center border border-gray-700/50"
       >
         {status === "verifying" && (
           <>
@@ -55,7 +55,7 @@ const VerifyEmail = () => {
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"
             />
-            <h2 className="text-white text-xl font-bold">
+            <h2 className="text-white text-lg md:text-xl font-bold">
               Verifying your email...
             </h2>
           </>
@@ -64,7 +64,7 @@ const VerifyEmail = () => {
         {status === "success" && (
           <>
             <span className="text-6xl block mb-4">✅</span>
-            <h2 className="text-white text-xl font-bold mb-2">
+            <h2 className="text-white text-lg md:text-xl font-bold mb-2">
               Email Verified!
             </h2>
             <p className="text-gray-400">{message}</p>
@@ -77,7 +77,7 @@ const VerifyEmail = () => {
         {status === "error" && (
           <>
             <span className="text-6xl block mb-4">❌</span>
-            <h2 className="text-white text-xl font-bold mb-2">
+            <h2 className="text-white text-lg md:text-xl font-bold mb-2">
               Verification Failed
             </h2>
             <p className="text-gray-400">{message}</p>

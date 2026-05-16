@@ -214,7 +214,7 @@ const Home = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="hidden md:flex items-center gap-8"
+            className="hidden lg:flex items-center gap-8"
           >
             <motion.a
               whileHover={{ scale: 1.05, color: "#a78bfa" }}
@@ -256,7 +256,7 @@ const Home = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32"
+        className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-20 pb-20 md:pb-32"
       >
         <div className="text-center">
           {/* Badge with bounce animation */}
@@ -277,7 +277,7 @@ const Home = () => {
           <motion.h1
             custom={1}
             variants={heroTextReveal}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
           >
             <motion.span
               initial={{ opacity: 0 }}
@@ -426,7 +426,7 @@ const Home = () => {
       >
         <motion.h2
           variants={scaleReveal}
-          className="text-4xl font-bold text-white text-center mb-16"
+          className="text-3xl md:text-4xl font-bold text-white text-center mb-16"
         >
           <motion.span
             initial={{ opacity: 0, y: 20 }}
@@ -536,7 +536,7 @@ const Home = () => {
           <MotionLink
             to="/login?signup=true"
             variants={slideInLeft}
-            className="text-4xl font-bold text-white cursor-pointer mb-4 relative z-10 block"
+            className="text-3xl md:text-4xl font-bold text-white cursor-pointer mb-4 relative z-10 block"
           >
             Ready to Start Your Journey?
           </MotionLink>

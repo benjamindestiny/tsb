@@ -201,10 +201,10 @@ const Settings = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className="lg:w-64 flex-shrink-0">
-            <nav className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 space-y-1 sticky top-24">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
+        <div className="flex flex-col lg:flex-row gap-4 md:p-6">
+          <div className="w-full lg:w-64 flex-shrink-0">
+            <nav className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 space-y-1 sticky top-24 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible">
               {[
                 { id: "profile", icon: "👤", label: "Profile" },
                 { id: "notifications", icon: "🔔", label: "Notifications" },
@@ -229,12 +229,12 @@ const Settings = () => {
                 <motion.div
                   key="profile"
                   {...fadeIn}
-                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6"
+                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6"
                 >
                   <h2 className="text-xl font-semibold text-white mb-6">
                     Profile Information
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-6">
                     <div>
                       <label className={labelClass}>Display Name</label>
                       <input
@@ -329,7 +329,7 @@ const Settings = () => {
                 <motion.div
                   key="payment"
                   {...fadeIn}
-                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6"
+                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6"
                 >
                   <h2 className="text-xl font-semibold text-white mb-6">
                     Payment Settings
@@ -378,7 +378,7 @@ const Settings = () => {
                 <motion.div
                   key="notifications"
                   {...fadeIn}
-                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6"
+                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6"
                 >
                   <h2 className="text-xl font-semibold text-white mb-6">
                     Notification Preferences
@@ -461,7 +461,7 @@ const Settings = () => {
                 <motion.div
                   key="appearance"
                   {...fadeIn}
-                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6"
+                  className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6"
                 >
                   <h2 className="text-xl font-semibold text-white mb-6">
                     Appearance Settings
@@ -547,7 +547,7 @@ const Settings = () => {
 
               {activeSection === "security" && (
                 <motion.div key="security" {...fadeIn} className="space-y-6">
-                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+                  <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
                     <h2 className="text-xl font-semibold text-white mb-6">
                       Change Password
                     </h2>
@@ -583,7 +583,7 @@ const Settings = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6">
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 md:p-6">
                     <h2 className="text-xl font-semibold text-red-400 mb-4">
                       Danger Zone
                     </h2>

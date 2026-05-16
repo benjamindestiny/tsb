@@ -130,7 +130,7 @@ const About = () => {
 
           <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
           >
             About
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -156,7 +156,7 @@ const About = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto px-4 md:px-0 leading-relaxed"
           >
             We're on a mission to empower African creators by making it easy to
             receive support from their community. What started as a simple idea
@@ -437,7 +437,7 @@ const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mb-20 bg-gray-800/30 backdrop-blur-sm border border-purple-500/20 rounded-3xl p-10"
+          className="mb-20 bg-gray-800/30 backdrop-blur-sm border border-purple-500/20 rounded-3xl p-6 md:p-10"
         >
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-white mb-4">Contact Us</h2>
@@ -464,7 +464,7 @@ const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-center bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12"
+          className="text-center bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-6 md:p-12"
         >
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Start Your Journey?

@@ -264,17 +264,17 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         <AnimatePresence mode="wait">
           {/* PROFILE TAB */}
           {activeTab === "profile" && (
             <motion.div
               key="profile"
               {...fadeIn}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 md:p-6"
             >
-              <div className="lg:col-span-1 space-y-6">
-                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 text-center">
+              <div className="md:col-span-1 space-y-6">
+                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6 text-center">
                   <h3 className="text-lg font-semibold text-white mb-4">
                     Profile Picture
                   </h3>
@@ -303,7 +303,7 @@ const Profile = () => {
                     Click to change photo
                   </p>
                 </div>
-                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 text-center">
+                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6 text-center">
                   <h3 className="text-lg font-semibold text-white mb-4">
                     Cover Image
                   </h3>
@@ -341,8 +341,8 @@ const Profile = () => {
                   </label>
                 </div>
               </div>
-              <div className="lg:col-span-2 space-y-6">
-                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+              <div className="md:col-span-2 space-y-6">
+                <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
                   <h3 className="text-lg font-semibold text-white mb-6">
                     Basic Information
                   </h3>
@@ -452,7 +452,7 @@ const Profile = () => {
           {/* SOCIAL LINKS TAB */}
           {activeTab === "links" && (
             <motion.div key="links" {...fadeIn} className="max-w-3xl mx-auto">
-              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
                 <h3 className="text-lg font-semibold text-white mb-2">
                   Social Media Links
                 </h3>
@@ -566,7 +566,7 @@ const Profile = () => {
               {...fadeIn}
               className="max-w-3xl mx-auto"
             >
-              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 space-y-6">
+              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6 space-y-6">
                 <h3 className="text-lg font-semibold text-white">
                   Appearance Settings
                 </h3>
@@ -729,7 +729,7 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 space-y-6">
+              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6 space-y-6">
                 <h3 className="text-lg font-semibold text-white">
                   Embed Codes
                 </h3>
@@ -774,7 +774,7 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-4 md:p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Share Directly To
                 </h3>

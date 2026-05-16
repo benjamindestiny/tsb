@@ -113,7 +113,7 @@ const HowItWorks = () => {
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -146,7 +146,7 @@ const HowItWorks = () => {
           <span className="inline-block px-4 py-2 bg-purple-500/20 border border-purple-500/50 rounded-full text-purple-300 text-sm mb-6">
             📖 Simple & Easy
           </span>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-6">
             How{" "}
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               TSB
@@ -207,7 +207,7 @@ const HowItWorks = () => {
           viewport={{ once: true }}
           className="mb-20"
         >
-          <h2 className="text-4xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
             Why Creators Love TSB
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -236,7 +236,7 @@ const HowItWorks = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12"
+          className="text-center bg-gradient-to-r from-purple-500/10 to-indigo-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-6 md:p-12"
         >
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Start Receiving Support?

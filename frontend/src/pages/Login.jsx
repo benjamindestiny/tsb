@@ -86,7 +86,7 @@ const Login = () => {
         animate="visible"
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-700/50">
+        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-700/50">
           <motion.div
             variants={logoVariants}
             initial="hidden"
@@ -96,7 +96,7 @@ const Login = () => {
           >
             <Link to="/">
               <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center cursor-pointer">
-                <span className="text-3xl font-bold text-white">✦</span>
+                <span className="text-2xl md:text-3xl font-bold text-white">✦</span>
               </div>
             </Link>
           </motion.div>
@@ -107,7 +107,7 @@ const Login = () => {
             transition={{ delay: 0.3 }}
             className="text-center mb-8"
           >
-            <h2 className="text-3xl font-bold text-white mb-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
               Welcome Back, Creator!
             </h2>
             <p className="text-gray-400">Continue your creative journey</p>

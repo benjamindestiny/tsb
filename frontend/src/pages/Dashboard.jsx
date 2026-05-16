@@ -107,7 +107,7 @@ const Dashboard = () => {
             animate="open"
             exit="closed"
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="w-64 bg-gray-800/50 backdrop-blur-xl border-r border-gray-700/50 p-6 flex-shrink-0"
+            className="w-64 z-40 fixed lg:relative lg:z-20 h-screen lg:h-auto bg-gray-800/50 backdrop-blur-xl border-r border-gray-700/50 p-6 flex-shrink-0"
           >
             <Link to="/">
               <motion.div
@@ -217,7 +217,7 @@ const Dashboard = () => {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto lg:ml-64 ml-0">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -290,7 +290,7 @@ const Dashboard = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="p-6 space-y-6"
+          className="p-4 md:p-6 space-y-6"
         >
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -521,7 +521,7 @@ const Dashboard = () => {
               >
                 <Link
                   to="/supporter-history"
-                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all flex items-center gap-3 whitespace-nowrap"
+                  className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all flex items-center gap-3 whitespace-nowrap"
                 >
                   <span className="text-xl">📋</span>
                   <span>View Full History</span>
