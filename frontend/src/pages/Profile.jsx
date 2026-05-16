@@ -89,17 +89,6 @@ const Profile = () => {
     },
   ]);
 
-  const [paymentSettings, setPaymentSettings] = useState({
-    opayEnabled: false,
-    opayNumber: "",
-    opayName: "",
-    bankEnabled: false,
-    bankName: "",
-    accountNumber: "",
-    accountName: "",
-    accountType: "savings",
-  });
-
   const [appearance, setAppearance] = useState({
     theme: "dark",
     accentColor: "purple",
@@ -117,14 +106,12 @@ const Profile = () => {
     cyan: "#06b6d4",
   };
 
-  // APPLY APPEARANCE TO DOCUMENT
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", appearance.theme);
     document.documentElement.style.setProperty(
       "--accent",
       accentColors[appearance.accentColor],
     );
-
     if (appearance.theme === "light") {
       document.body.classList.add("light-theme");
       document.body.style.backgroundColor = "#f5f5f5";
@@ -134,12 +121,10 @@ const Profile = () => {
     }
   }, [appearance.theme, appearance.accentColor]);
 
-  // LOAD FROM LOCAL STORAGE
   useEffect(() => {
     const savedCreator = localStorage.getItem("tsb_creator");
     const savedProfile = localStorage.getItem("tsb_profile");
     const savedLinks = localStorage.getItem("tsb_socialLinks");
-    const savedPayment = localStorage.getItem("tsb_paymentSettings");
     const savedAppearance = localStorage.getItem("tsb_appearance");
 
     if (savedCreator) {
@@ -154,8 +139,6 @@ const Profile = () => {
     }
 
     if (savedLinks) setSocialLinks(JSON.parse(savedLinks));
-    if (savedPayment)
-      setPaymentSettings((prev) => ({ ...prev, ...JSON.parse(savedPayment) }));
     if (savedAppearance)
       setAppearance((prev) => ({ ...prev, ...JSON.parse(savedAppearance) }));
 
@@ -163,15 +146,10 @@ const Profile = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // SAVE TO LOCAL STORAGE
   const handleSave = () => {
     setSaving(true);
     localStorage.setItem("tsb_profile", JSON.stringify(profile));
     localStorage.setItem("tsb_socialLinks", JSON.stringify(socialLinks));
-    localStorage.setItem(
-      "tsb_paymentSettings",
-      JSON.stringify(paymentSettings),
-    );
     localStorage.setItem("tsb_appearance", JSON.stringify(appearance));
 
     const savedCreator = localStorage.getItem("tsb_creator");
@@ -197,13 +175,11 @@ const Profile = () => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
   };
-
   const handleSocialLinkChange = (index, field, value) => {
     const updated = [...socialLinks];
     updated[index][field] = value;
     setSocialLinks(updated);
   };
-
   const toggleConnect = (index) => {
     const updated = [...socialLinks];
     updated[index].connected = !updated[index].connected;
@@ -213,7 +189,6 @@ const Profile = () => {
     }
     setSocialLinks(updated);
   };
-
   const handleSocialLogoUpload = (index, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -226,13 +201,11 @@ const Profile = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const copyToClipboard = (text, field) => {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
   };
-
   const handleAvatarUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -245,7 +218,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Header */}
       <div className="sticky top-0 z-20 bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/50">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -273,14 +245,11 @@ const Profile = () => {
               {saving ? "Saving..." : isSaved ? "✅ Saved!" : "Save Changes"}
             </button>
           </div>
-
-          {/* Tabs */}
           <div className="flex gap-1 mt-4 bg-gray-800/50 rounded-xl p-1 inline-flex flex-wrap">
             {[
               { id: "profile", label: "👤 Profile" },
               { id: "links", label: "🔗 Social Links" },
               { id: "appearance", label: "🎨 Appearance" },
-              { id: "payment", label: "💳 Payment" },
               { id: "share", label: "📤 Share Link" },
             ].map((tab) => (
               <button
@@ -295,10 +264,9 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <AnimatePresence mode="wait">
-          {/* ============ PROFILE TAB ============ */}
+          {/* PROFILE TAB */}
           {activeTab === "profile" && (
             <motion.div
               key="profile"
@@ -373,7 +341,6 @@ const Profile = () => {
                   </label>
                 </div>
               </div>
-
               <div className="lg:col-span-2 space-y-6">
                 <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
                   <h3 className="text-lg font-semibold text-white mb-6">
@@ -482,7 +449,7 @@ const Profile = () => {
             </motion.div>
           )}
 
-          {/* ============ SOCIAL LINKS TAB ============ */}
+          {/* SOCIAL LINKS TAB */}
           {activeTab === "links" && (
             <motion.div key="links" {...fadeIn} className="max-w-3xl mx-auto">
               <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
@@ -500,7 +467,6 @@ const Profile = () => {
                       className="p-4 bg-gray-700/20 rounded-xl"
                     >
                       <div className="flex items-center gap-4 flex-wrap">
-                        {/* Logo Upload */}
                         <label className="cursor-pointer flex-shrink-0">
                           <div className="w-12 h-12 bg-gray-600 rounded-xl flex items-center justify-center hover:ring-2 hover:ring-purple-500/50 transition-all overflow-hidden">
                             {link.logo ? (
@@ -522,12 +488,9 @@ const Profile = () => {
                             onChange={(e) => handleSocialLogoUpload(index, e)}
                           />
                         </label>
-
                         <span className="text-white font-semibold capitalize text-sm w-20">
                           {link.platform}
                         </span>
-
-                        {/* Connect Button */}
                         {!link.connected ? (
                           <button
                             onClick={() => toggleConnect(index)}
@@ -539,7 +502,6 @@ const Profile = () => {
                           </button>
                         ) : (
                           <>
-                            {/* URL Input */}
                             <input
                               type="url"
                               value={link.url}
@@ -553,7 +515,6 @@ const Profile = () => {
                               placeholder={`https://${link.platform}.com/yourhandle`}
                               className="flex-1 min-w-[200px] px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
                             />
-                            {/* Label Input */}
                             <input
                               type="text"
                               value={link.label}
@@ -567,7 +528,6 @@ const Profile = () => {
                               placeholder="Button text"
                               className="w-44 px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
                             />
-                            {/* Enabled Toggle */}
                             <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                               <input
                                 type="checkbox"
@@ -583,7 +543,6 @@ const Profile = () => {
                               />
                               <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-purple-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                             </label>
-                            {/* Disconnect */}
                             <button
                               onClick={() => toggleConnect(index)}
                               className="px-3 py-2 bg-red-500/20 border border-red-500/50 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
@@ -600,7 +559,7 @@ const Profile = () => {
             </motion.div>
           )}
 
-          {/* ============ APPEARANCE TAB ============ */}
+          {/* APPEARANCE TAB */}
           {activeTab === "appearance" && (
             <motion.div
               key="appearance"
@@ -624,12 +583,6 @@ const Profile = () => {
                       </button>
                     ))}
                   </div>
-                  <p className="text-gray-500 text-xs mt-2">
-                    Current:{" "}
-                    <span className="text-purple-400 capitalize">
-                      {appearance.theme}
-                    </span>
-                  </p>
                 </div>
                 <div>
                   <label className={labelClass}>Accent Color</label>
@@ -652,12 +605,6 @@ const Profile = () => {
                       </button>
                     ))}
                   </div>
-                  <p className="text-gray-500 text-xs mt-2">
-                    Current:{" "}
-                    <span className="text-purple-400 capitalize">
-                      {appearance.accentColor}
-                    </span>
-                  </p>
                 </div>
                 <div className="space-y-4">
                   {[
@@ -712,7 +659,6 @@ const Profile = () => {
                     placeholder="Enjoy my content? Buy me a coffee! ☕"
                   />
                 </div>
-                {/* Live Preview Box */}
                 <div
                   className="p-4 rounded-xl border-2 border-dashed border-gray-600"
                   style={{
@@ -749,168 +695,7 @@ const Profile = () => {
             </motion.div>
           )}
 
-          {/* ============ PAYMENT TAB ============ */}
-          {activeTab === "payment" && (
-            <motion.div key="payment" {...fadeIn} className="max-w-3xl mx-auto">
-              <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 space-y-6">
-                <h3 className="text-lg font-semibold text-white">
-                  Payment Settings
-                </h3>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-white font-medium">OPay Transfer</h4>
-                    <p className="text-gray-400 text-sm">
-                      Accept payments via OPay
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={paymentSettings.opayEnabled}
-                      onChange={(e) =>
-                        setPaymentSettings({
-                          ...paymentSettings,
-                          opayEnabled: e.target.checked,
-                        })
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-purple-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                  </label>
-                </div>
-                {paymentSettings.opayEnabled && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-4 border-l-2 border-purple-500/30">
-                    <div>
-                      <label className={labelClass}>OPay Phone Number</label>
-                      <input
-                        type="text"
-                        value={paymentSettings.opayNumber}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            opayNumber: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                        placeholder="08012345678"
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>OPay Account Name</label>
-                      <input
-                        type="text"
-                        value={paymentSettings.opayName}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            opayName: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                        placeholder="Name on OPay account"
-                      />
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-600/50">
-                  <div>
-                    <h4 className="text-white font-medium">Bank Transfer</h4>
-                    <p className="text-gray-400 text-sm">
-                      Enable direct bank transfer
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={paymentSettings.bankEnabled}
-                      onChange={(e) =>
-                        setPaymentSettings({
-                          ...paymentSettings,
-                          bankEnabled: e.target.checked,
-                        })
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-purple-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                  </label>
-                </div>
-                {paymentSettings.bankEnabled && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-4 border-l-2 border-purple-500/30">
-                    <div>
-                      <label className={labelClass}>Bank Name</label>
-                      <select
-                        value={paymentSettings.bankName}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            bankName: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                      >
-                        <option value="">Select Bank</option>
-                        <option value="access">Access Bank</option>
-                        <option value="gtbank">GTBank</option>
-                        <option value="firstbank">First Bank</option>
-                        <option value="uba">UBA</option>
-                        <option value="zenith">Zenith Bank</option>
-                        <option value="wema">Wema Bank</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Account Number</label>
-                      <input
-                        type="text"
-                        value={paymentSettings.accountNumber}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            accountNumber: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                        placeholder="10-digit number"
-                        maxLength={10}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Account Name</label>
-                      <input
-                        type="text"
-                        value={paymentSettings.accountName}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            accountName: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                        placeholder="Full account name"
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Account Type</label>
-                      <select
-                        value={paymentSettings.accountType}
-                        onChange={(e) =>
-                          setPaymentSettings({
-                            ...paymentSettings,
-                            accountType: e.target.value,
-                          })
-                        }
-                        className={inputClass}
-                      >
-                        <option value="savings">Savings</option>
-                        <option value="current">Current</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ============ SHARE TAB ============ */}
+          {/* SHARE TAB */}
           {activeTab === "share" && (
             <motion.div
               key="share"
@@ -944,14 +729,10 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Embed Codes */}
               <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 space-y-6">
                 <h3 className="text-lg font-semibold text-white">
                   Embed Codes
                 </h3>
-
-                {/* HTML Embed */}
                 <div>
                   <label className={labelClass}>HTML Code</label>
                   <p className="text-gray-400 text-xs mb-2">
@@ -972,25 +753,13 @@ const Profile = () => {
                     </button>
                   </div>
                 </div>
-
-                {/* JS Embed */}
                 <div>
                   <label className={labelClass}>JavaScript Code</label>
                   <p className="text-gray-400 text-xs mb-2">
                     Paste this in your website's JavaScript
                   </p>
                   <div className="bg-gray-900/50 border border-gray-600 rounded-lg p-3 relative">
-                    <code className="text-yellow-400 text-xs break-all block pr-16">{`<script>
-  (function() {
-    var btn = document.createElement('a');
-    btn.href = '${supportLink}';
-    btn.target = '_blank';
-    btn.innerHTML = '☕ Support Me';
-    btn.style.cssText = 'display:inline-block;padding:12px 24px;background:#8b5cf6;color:white;border-radius:12px;text-decoration:none;font-family:sans-serif;font-weight:bold;cursor:pointer;';
-    document.getElementById('tsb-support-btn')?.appendChild(btn);
-  })();
-</script>
-<div id="tsb-support-btn"></div>`}</code>
+                    <code className="text-yellow-400 text-xs break-all block pr-16">{`<script>(function(){var btn=document.createElement('a');btn.href='${supportLink}';btn.target='_blank';btn.innerHTML='☕ Support Me';btn.style.cssText='display:inline-block;padding:12px 24px;background:#8b5cf6;color:white;border-radius:12px;text-decoration:none;font-family:sans-serif;font-weight:bold;cursor:pointer;';document.getElementById('tsb-support-btn')?.appendChild(btn);})();</script><div id="tsb-support-btn"></div>`}</code>
                     <button
                       onClick={() =>
                         copyToClipboard(
@@ -1005,8 +774,6 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Quick Share */}
               <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Share Directly To
