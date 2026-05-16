@@ -146,13 +146,13 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, creator.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
-    if (!creator.isVerified) {
-      return res.status(403).json({ 
-        error: "Please verify your email before logging in",
-        needsVerification: true,
-        email: creator.email,
-      });
-    }
+    // if (!creator.isVerified) {
+    //   return res.status(403).json({ 
+    //     error: "Please verify your email before logging in",
+    //     needsVerification: true,
+    //     email: creator.email,
+    //   });
+    // }
 
     const token = jwt.sign(
       { id: creator._id, verified: true },
