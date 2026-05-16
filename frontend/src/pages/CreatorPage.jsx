@@ -84,10 +84,22 @@ const CreatorPage = () => {
         ],
       },
       callback: function (response) {
+        // Show popup immediately with payment reference
+        setDonationDetails({
+          amount: Number(supportAmount),
+          supporterName: isAnonymous ? "Anonymous" : supporterName || "You",
+          supporterEmail: supporterEmail,
+          message: message,
+          isAnonymous: isAnonymous,
+          reference: response.reference,
+        });
+        setShowSuccessPopup(true);
+        setShowPayment(false);
+        setSupportAmount("");
+        setMessage("");
+
+        // Verify silently in background
         verifyPayment(response.reference);
-      },
-      onClose: function () {
-        setError("Payment cancelled. You can try again.");
       },
     });
 
