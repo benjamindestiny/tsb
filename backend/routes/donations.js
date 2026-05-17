@@ -3,7 +3,6 @@ const router = express.Router();
 const Donation = require("../models/Donation");
 const { Creator } = require("../models/Creator");
 const { protect } = require("../middleware/auth");
-const { sendNewSupporterEmail } = require("../services/emailService");
 
 // POST /api/donations/support/:username
 router.post("/support/:username", async (req, res) => {
@@ -11,6 +10,8 @@ router.post("/support/:username", async (req, res) => {
     const {
       donorName,
       donorEmail,
+      supporterName,  // Accept old name too
+      supporterEmail, // Accept old name too
       amount,
       message,
       isAnonymous,
@@ -18,35 +19,28 @@ router.post("/support/:username", async (req, res) => {
       paymentReference,
     } = req.body;
 
+    // Use whichever field was sent
+    const name = donorName || supporterName || "Anonymous";
+    const email = donorEmail || supporterEmail || "anonymous@tsb.com";
+
     // Find the creator
     const creator = await Creator.findOne({ username: req.params.username });
-
     if (!creator) {
-      return res.status(404).json({
-        success: false,
-        message: "Creator not found",
-      });
+      return res.status(404).json({ success: false, message: "Creator not found" });
     }
 
     // Create donation
     const donation = await Donation.create({
       creator: creator._id,
-      donorName: isAnonymous ? "Anonymous" : donorName,
-      donorEmail,
+      donorName: isAnonymous ? "Anonymous" : name,
+      donorEmail: email,
       amount,
       message: message || "",
       isAnonymous: isAnonymous || false,
       paymentMethod,
       paymentReference,
-      paymentStatus: "completed",
+      paymentStatus: "pending",
     });
-
-    // Send email notification
-    try {
-      await sendNewSupporterEmail(creator, donation);
-    } catch (emailErr) {
-      console.log("Notification email failed:", emailErr.message);
-    }
 
     // Update creator wallet balance
     await Creator.findByIdAndUpdate(creator._id, {
@@ -75,7 +69,6 @@ router.get("/my-supporters", protect, async (req, res) => {
   try {
     const donations = await Donation.find({
       creator: req.creator._id,
-      paymentStatus: "completed",
     })
       .sort({ createdAt: -1 })
       .limit(50);
