@@ -3,7 +3,6 @@ const router = express.Router();
 const { Withdrawal } = require("../models/Creator");
 const { Creator } = require("../models/Creator");
 const { protect } = require("../middleware/auth");
-const { sendWithdrawalEmail } = require("../services/emailService");
 
 // POST /api/withdrawals/request
 router.post("/request", protect, async (req, res) => {
@@ -27,15 +26,11 @@ router.post("/request", protect, async (req, res) => {
       status: "pending",
     });
 
-    // Deduct from balance
     creator.wallet.balance -= amount;
     creator.wallet.pendingWithdrawal += amount;
     await creator.save();
 
-    // Send email in background
-    sendWithdrawalEmail(creator, withdrawal).catch((err) =>
-      console.log("Withdrawal email failed:", err.message)
-    );
+    console.log(`💰 Withdrawal: ₦${amount} from @${creator.username}`);
 
     res.status(201).json({ success: true, withdrawal });
   } catch (error) {
@@ -49,7 +44,6 @@ router.get("/history", protect, async (req, res) => {
     const withdrawals = await Withdrawal.find({ creator: req.creator._id })
       .sort({ createdAt: -1 })
       .limit(20);
-
     res.json({ success: true, withdrawals });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
