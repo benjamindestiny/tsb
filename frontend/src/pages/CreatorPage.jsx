@@ -54,7 +54,7 @@ const CreatorPage = () => {
 
   const handleConfirmSupport = async () => {
     if (!supportAmount || Number(supportAmount) < 3000) {
-      setError("Minimum support is ₦1,000");
+      setError("Minimum support is ₦3,000");
       return;
     }
 
