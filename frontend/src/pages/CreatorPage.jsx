@@ -1,4 +1,3 @@
-// CreatorPage.jsx
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,7 +5,10 @@ import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const API_URL = "https://tsb-taln.onrender.com/api";
-const PAYSTACK_PUBLIC_KEY = "pk_test_c4249d32e96c4e4f833c41152da9fec5c4e8fb0d";
+
+
+const YOUR_OPAY_NUMBER = "7017153753";
+const YOUR_OPAY_NAME = "Williams Ruth Ashomen";
 
 const CreatorPage = () => {
   const { username } = useParams();
@@ -20,10 +22,10 @@ const CreatorPage = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [showOpayDetails, setShowOpayDetails] = useState(false);
+  const [supportReference, setSupportReference] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [donationDetails, setDonationDetails] = useState(null);
 
   const quickAmounts = [3000, 5000, 10000, 20000];
 
@@ -50,94 +52,47 @@ const CreatorPage = () => {
     }
   };
 
-  const handlePaystackPayment = () => {
+  const handleConfirmSupport = async () => {
     if (!supportAmount || Number(supportAmount) < 3000) {
-      setError("Minimum support is ₦3,000");
+      setError("Minimum support is ₦1,000");
       return;
     }
 
-    const amountInKobo = Number(supportAmount) * 100;
-
-    const handler = window.PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
-      email: supporterEmail || "anonymous@tsb.com",
-      amount: amountInKobo,
-      currency: "NGN",
-      ref: `TSB-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      metadata: {
-        custom_fields: [
-          {
-            display_name: "Supporter Name",
-            variable_name: "supporter_name",
-            value: isAnonymous ? "Anonymous" : supporterName || "Supporter",
-          },
-          {
-            display_name: "Creator",
-            variable_name: "creator_username",
-            value: username,
-          },
-          {
-            display_name: "Message",
-            variable_name: "message",
-            value: message || "",
-          },
-        ],
-      },
-      callback: function (response) {
-        // Show popup immediately with payment reference
-        setDonationDetails({
-          amount: Number(supportAmount),
-          supporterName: isAnonymous ? "Anonymous" : supporterName || "You",
-          supporterEmail: supporterEmail,
-          message: message,
-          isAnonymous: isAnonymous,
-          reference: response.reference,
-        });
-        setShowSuccessPopup(true);
-        setShowPayment(false);
-        setSupportAmount("");
-        setMessage("");
-
-        // Verify silently in background
-        verifyPayment(response.reference);
-      },
-    });
-
-    handler.openIframe();
-  };
-
-  const verifyPayment = async (reference) => {
     setSubmitting(true);
+    setError("");
+
+    const reference = `TSB-${Date.now().toString(36).toUpperCase().slice(-4)}`;
+    setSupportReference(reference);
+
     try {
-      const { data } = await axios.post(`${API_URL}/payments/verify`, {
-        reference,
-        creatorUsername: username,
+      // Record the donation as pending
+      await axios.post(`${API_URL}/donations/support/${username}`, {
         supporterName: isAnonymous
           ? "Anonymous"
           : supporterName || loggedInUser?.displayName || "Supporter",
-        supporterEmail:
-          supporterEmail || loggedInUser?.email || "anonymous@tsb.com",
+        supporterEmail: supporterEmail || "anonymous@tsb.com",
         amount: Number(supportAmount),
         message,
         isAnonymous,
+        paymentMethod: "opay",
+        paymentReference: reference,
       });
 
-      if (data.success) {
-        setDonationDetails(data.donation);
-        setShowSuccessPopup(true);
-        setShowPayment(false);
-        setSupportAmount("");
-        setMessage("");
-      } else {
-        setError("Payment verification failed. Please contact support.");
-      }
+      // Show OPay details
+      setShowOpayDetails(true);
     } catch (err) {
-      setError(
-        "Verification failed. Don't worry, your payment is safe - we'll process it shortly.",
-      );
+      setError("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const confirmPaymentSent = () => {
+    setShowSuccessPopup(true);
+    setShowPayment(false);
+    setShowOpayDetails(false);
+    setSupportAmount("");
+    setMessage("");
   };
 
   if (loading) return <LoadingSpinner message="Loading creator..." />;
@@ -170,11 +125,10 @@ const CreatorPage = () => {
               <span className="text-white font-bold">TSB</span>
             </Link>
           </div>
-
           {loggedInUser ? (
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-sm text-gray-300 hover:text-white"
             >
               <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                 {(loggedInUser.displayName || loggedInUser.username || "?")
@@ -186,7 +140,7 @@ const CreatorPage = () => {
           ) : (
             <Link
               to="/login"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-gray-400 hover:text-white"
             >
               Are you a creator? Login
             </Link>
@@ -201,45 +155,15 @@ const CreatorPage = () => {
             .charAt(0)
             .toUpperCase()}
         </div>
-
         <h1 className="text-3xl font-bold text-white mb-2">
           {creator.displayName || creator.username}
         </h1>
         <p className="text-gray-400 mb-2">@{creator.username}</p>
         {creator.bio && <p className="text-gray-300 mb-6">{creator.bio}</p>}
 
-        {creator.socialLinks && creator.socialLinks.length > 0 && (
-          <div className="flex justify-center gap-3 mb-8 flex-wrap">
-            {creator.socialLinks.map((link, i) => (
-              <a
-                key={i}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-full text-gray-300 hover:text-white hover:border-purple-500/50 transition-all text-sm"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        )}
-
         <p className="text-gray-400 mb-8 italic">
           "Enjoy my content? Tap The Support Button ☕"
         </p>
-
-        {successMessage && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-green-500/20 border border-green-500/50 rounded-2xl p-6 mb-6"
-          >
-            <span className="text-4xl block mb-2">🎉</span>
-            <p className="text-green-300 font-semibold whitespace-pre-line">
-              {successMessage}
-            </p>
-          </motion.div>
-        )}
 
         {!showPayment ? (
           <motion.button
@@ -250,14 +174,77 @@ const CreatorPage = () => {
           >
             ☕ Support Me
           </motion.button>
+        ) : showOpayDetails ? (
+          /* OPAY DETAILS SCREEN */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gray-800/50 backdrop-blur-sm border-2 border-purple-500/50 rounded-2xl p-6 text-left"
+          >
+            <h3 className="text-white font-semibold text-lg mb-4 text-center">
+              📱 Send via OPay
+            </h3>
+
+            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 mb-4 text-center">
+              <p className="text-gray-400 text-sm mb-1">
+                Send exactly this amount:
+              </p>
+              <p className="text-green-400 font-bold text-3xl">
+                ₦{Number(supportAmount).toLocaleString()}
+              </p>
+            </div>
+
+            <div className="bg-gray-900/50 rounded-xl p-4 mb-4 text-center">
+              <p className="text-gray-400 text-sm mb-1">To this OPay number:</p>
+              <p className="text-white font-bold text-2xl tracking-widest">
+                {YOUR_OPAY_NUMBER}
+              </p>
+              <p className="text-gray-400 text-sm mt-1">{YOUR_OPAY_NAME}</p>
+            </div>
+
+            <div className="bg-gray-900/50 rounded-xl p-4 mb-4 text-center">
+              <p className="text-gray-400 text-sm mb-1">
+                Reference (add as note):
+              </p>
+              <p className="text-yellow-400 font-mono font-bold text-lg">
+                {supportReference}
+              </p>
+            </div>
+
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4">
+              <p className="text-yellow-400 text-sm text-center">
+                ⚠️ Open your OPay app now and send{" "}
+                <strong>₦{Number(supportAmount).toLocaleString()}</strong> to{" "}
+                <strong>{YOUR_OPAY_NUMBER}</strong>
+              </p>
+            </div>
+
+            <button
+              onClick={confirmPaymentSent}
+              className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors"
+            >
+              ✅ I've Sent the Money
+            </button>
+
+            <button
+              onClick={() => {
+                setShowOpayDetails(false);
+                setShowPayment(false);
+              }}
+              className="w-full mt-2 py-2 text-gray-400 text-sm hover:text-white"
+            >
+              Cancel
+            </button>
+          </motion.div>
         ) : (
+          /* PAYMENT FORM */
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 text-left"
           >
             <h3 className="text-white font-semibold text-lg mb-4 text-center">
-              Send Support
+              Send Support via OPay
             </h3>
 
             <div className="mb-4">
@@ -300,19 +287,6 @@ const CreatorPage = () => {
               </div>
             )}
 
-            <div className="mb-4">
-              <label className="block text-sm text-gray-400 mb-2">
-                Email (for receipt)
-              </label>
-              <input
-                type="email"
-                value={supporterEmail}
-                onChange={(e) => setSupporterEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-purple-500"
-              />
-            </div>
-
             <label className="flex items-center gap-2 mb-4 cursor-pointer">
               <input
                 type="checkbox"
@@ -337,21 +311,21 @@ const CreatorPage = () => {
             </div>
 
             <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-gray-500 text-xs">Secured by</span>
-              <span className="text-green-400 font-bold text-sm">Paystack</span>
-              <span className="text-gray-500 text-xs">🔒</span>
+              <span className="text-gray-500 text-xs">Powered by</span>
+              <span className="text-green-400 font-bold text-sm">OPay</span>
+              <span className="text-gray-500 text-xs">📱</span>
             </div>
 
             {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
             <button
-              onClick={handlePaystackPayment}
+              onClick={handleConfirmSupport}
               disabled={submitting}
               className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl disabled:opacity-50"
             >
               {submitting
                 ? "Processing..."
-                : `Pay ₦${supportAmount ? Number(supportAmount).toLocaleString() : "0"} with Paystack`}
+                : `Confirm Support - ₦${supportAmount ? Number(supportAmount).toLocaleString() : "0"}`}
             </button>
 
             <button
@@ -364,9 +338,9 @@ const CreatorPage = () => {
         )}
       </div>
 
-      {/* Success Popup Modal */}
+      {/* Success Popup */}
       <AnimatePresence>
-        {showSuccessPopup && donationDetails && (
+        {showSuccessPopup && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -377,45 +351,15 @@ const CreatorPage = () => {
               initial={{ scale: 0.8, opacity: 0, y: 50 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.8, opacity: 0, y: 50 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl"
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
-                className="w-20 h-20 bg-green-500/20 border-2 border-green-500/50 rounded-full flex items-center justify-center mx-auto mb-6"
-              >
+              <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-5xl">🎉</span>
-              </motion.div>
-
+              </div>
               <h2 className="text-2xl font-bold text-white mb-2">Thank You!</h2>
               <p className="text-green-400 text-lg font-semibold mb-4">
-                ₦{donationDetails.amount.toLocaleString()}
+                ₦{supportAmount ? Number(supportAmount).toLocaleString() : "0"}
               </p>
-
-              {!donationDetails.isAnonymous && (
-                <p className="text-gray-300 mb-2">
-                  From:{" "}
-                  <span className="text-white font-medium">
-                    {donationDetails.supporterName}
-                  </span>
-                </p>
-              )}
-              {donationDetails.supporterEmail &&
-                !donationDetails.isAnonymous && (
-                  <p className="text-gray-400 text-sm mb-2">
-                    {donationDetails.supporterEmail}
-                  </p>
-                )}
-              {donationDetails.message && (
-                <div className="bg-gray-700/30 rounded-xl p-3 mb-4">
-                  <p className="text-gray-400 text-sm italic">
-                    "{donationDetails.message}"
-                  </p>
-                </div>
-              )}
-
               <p className="text-gray-300 mb-6">
                 Your support means the world to{" "}
                 <strong className="text-purple-400">
@@ -423,11 +367,13 @@ const CreatorPage = () => {
                 </strong>
                 ! 💜
               </p>
-
+              <p className="text-gray-500 text-sm mb-6">
+                The creator will verify your payment shortly.
+              </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowSuccessPopup(false)}
-                  className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-medium hover:bg-gray-600 transition-colors"
+                  className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-medium"
                 >
                   Close
                 </button>
@@ -446,7 +392,6 @@ const CreatorPage = () => {
         )}
       </AnimatePresence>
 
-      {/* TSB Branding */}
       <div className="text-center pb-8">
         <p className="text-gray-600 text-sm">
           Powered by{" "}

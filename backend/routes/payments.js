@@ -35,10 +35,13 @@ router.post("/webhook", async (req, res) => {
       const supporterEmail = paymentData.customer?.email || "";
 
       const creator = await Creator.findOne({ username: creatorUsername });
-      if (!creator) return res.status(404).json({ message: "Creator not found" });
+      if (!creator)
+        return res.status(404).json({ message: "Creator not found" });
 
       // Check duplicate
-      const existing = await Donation.findOne({ paymentReference: paymentData.reference });
+      const existing = await Donation.findOne({
+        paymentReference: paymentData.reference,
+      });
       if (existing) return res.json({ message: "Already processed" });
 
       const donation = await Donation.create({
@@ -64,9 +67,13 @@ router.post("/webhook", async (req, res) => {
         },
       });
 
-      try { await sendNewSupporterEmail(creator, donation); } catch (e) {}
+      try {
+        await sendNewSupporterEmail(creator, donation);
+      } catch (e) {}
 
-      console.log(`✅ Payment: ₦${amount} from ${supporterName} → @${creatorUsername}`);
+      console.log(
+        `✅ Payment: ₦${amount} from ${supporterName} → @${creatorUsername}`,
+      );
     }
 
     res.status(200).json({ message: "Webhook processed" });
@@ -78,7 +85,15 @@ router.post("/webhook", async (req, res) => {
 // Quick Verify (responds fast, doesn't re-verify with Paystack)
 router.post("/verify", async (req, res) => {
   try {
-    const { reference, creatorUsername, supporterName, supporterEmail, amount, message, isAnonymous } = req.body;
+    const {
+      reference,
+      creatorUsername,
+      supporterName,
+      supporterEmail,
+      amount,
+      message,
+      isAnonymous,
+    } = req.body;
 
     // Check if already processed
     const existing = await Donation.findOne({ paymentReference: reference });
@@ -98,7 +113,10 @@ router.post("/verify", async (req, res) => {
 
     // Find creator
     const creator = await Creator.findOne({ username: creatorUsername });
-    if (!creator) return res.status(404).json({ success: false, message: "Creator not found" });
+    if (!creator)
+      return res
+        .status(404)
+        .json({ success: false, message: "Creator not found" });
 
     // Create donation immediately
     const donation = await Donation.create({
@@ -126,8 +144,12 @@ router.post("/verify", async (req, res) => {
     });
 
     // Send email in background
-    sendNewSupporterEmail(creator, donation).catch(() => {});
-
+    // Send email to creator
+    try {
+      await sendNewSupporterEmail(creator, donation);
+    } catch (emailErr) {
+      console.log("Notification email failed:", emailErr.message);
+    }
     res.json({
       success: true,
       donation: {

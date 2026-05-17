@@ -12,6 +12,9 @@ import About from "./pages/About";
 import VerifyEmail from "./pages/VerifyEmail";
 import CreatorPage from "./pages/CreatorPage";
 import HowItWorks from "./pages/HowItWorks";
+import AdminDashboard from "./pages/AdminDashboard";
+
+
 
 function App() {
   return (
@@ -28,6 +31,7 @@ function App() {
       <Route path="/settings" element={<Settings />} />
       <Route path="/supporter-history" element={<SupporterHistory />} />
       <Route path="/about" element={<About />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       {/* Dynamic creator route MUST be LAST */}
       <Route path="/:username" element={<CreatorPage />} />
     </Routes>
