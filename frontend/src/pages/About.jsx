@@ -50,7 +50,7 @@ const About = () => {
   const founderInfo = {
     name: "Benjamin Destiny",
     title: "Founder & CEO of TSB",
-    company: "Founder at Neos",
+    company: "Founder at Flint",
     companyBio:
       "Neos is a tech company that delivers cutting-edge AI solutions, solving problems in better and innovative ways. We're reimagining how technology can transform everyday challenges into opportunities.",
     bio: "A passionate creator and developer who believes in empowering creators to turn their passion into sustainable careers. Built TSB to solve the funding gap for African creators.",
@@ -60,7 +60,7 @@ const About = () => {
   const coFounderInfo = {
     name: "Victor Omeife",
     title: "Co-Founder & CTO of TSB",
-    company: "Co-Founder at Neos",
+    company: "Co-Founder at Flint",
     companyBio:
       "Leading the technical vision at Neos, building AI-powered solutions that tackle complex problems with elegant, forward-thinking approaches.",
     bio: "Tech enthusiast and problem solver dedicated to building seamless payment solutions for creators. Leading the technical vision behind TSB's platform.",

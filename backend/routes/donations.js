@@ -9,8 +9,8 @@ const { sendNewSupporterEmail } = require("../services/emailService");
 router.post("/support/:username", async (req, res) => {
   try {
     const {
-      supporterName,
-      supporterEmail,
+      donorName,
+      donorEmail,
       amount,
       message,
       isAnonymous,
@@ -31,8 +31,8 @@ router.post("/support/:username", async (req, res) => {
     // Create donation
     const donation = await Donation.create({
       creator: creator._id,
-      supporterName: isAnonymous ? "Anonymous" : supporterName,
-      supporterEmail,
+      donorName: isAnonymous ? "Anonymous" : donorName,
+      donorEmail,
       amount,
       message: message || "",
       isAnonymous: isAnonymous || false,

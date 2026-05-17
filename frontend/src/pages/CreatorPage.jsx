@@ -16,8 +16,8 @@ const CreatorPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [supportAmount, setSupportAmount] = useState("");
-  const [supporterName, setSupporterName] = useState("");
-  const [supporterEmail, setSupporterEmail] = useState("");
+  const [donorName, setDonorName] = useState("");
+  const [donorEmail, setDonorEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -34,8 +34,8 @@ const CreatorPage = () => {
     if (savedCreator) {
       const user = JSON.parse(savedCreator);
       setLoggedInUser(user);
-      setSupporterEmail(user.email || "");
-      setSupporterName(user.displayName || user.username || "");
+      setDonorEmail(user.email || "");
+      setDonorName(user.displayName || user.username || "");
     }
     fetchCreator();
   }, [username]);
@@ -67,8 +67,8 @@ const CreatorPage = () => {
     try {
       // Record the donation as pending
       await axios.post(`${API_URL}/donations/support/${username}`, {
-        supporterName: isAnonymous ? "Anonymous" : (supporterName || loggedInUser?.displayName || "Supporter"),
-        supporterEmail: supporterEmail || "anonymous@tsb.com",
+        donorName: isAnonymous ? "Anonymous" : (donorName || loggedInUser?.displayName || "Supporter"),
+        donorEmail: donorEmail || "anonymous@tsb.com",
         amount: Number(supportAmount),
         message,
         isAnonymous,
@@ -198,7 +198,7 @@ const CreatorPage = () => {
             {!isAnonymous && (
               <div className="mb-4">
                 <label className="block text-sm text-gray-400 mb-2">Your Name</label>
-                <input type="text" value={supporterName} onChange={(e) => setSupporterName(e.target.value)} placeholder="Your name" className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-purple-500" />
+                <input type="text" value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder="Your name" className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-purple-500" />
               </div>
             )}
 
@@ -212,13 +212,6 @@ const CreatorPage = () => {
               <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={2} placeholder="Leave a message..." className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-purple-500 resize-none" />
             </div>
 
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-gray-500 text-xs">Powered by</span>
-              <span className="text-green-400 font-bold text-sm">OPay</span>
-              <span className="text-gray-500 text-xs">📱</span>
-            </div>
-
-            {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
             <button onClick={handleConfirmSupport} disabled={submitting} className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-xl disabled:opacity-50">
               {submitting ? "Processing..." : `Confirm Support - ₦${supportAmount ? Number(supportAmount).toLocaleString() : "0"}`}
@@ -232,15 +225,11 @@ const CreatorPage = () => {
       {/* Success Popup */}
       <AnimatePresence>
         {showSuccessPopup && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <motion.div initial={{ scale: 0.8, opacity: 0, y: 50 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.8, opacity: 0, y: 50 }} className="bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
-              <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-5xl">🎉</span>
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Thank You!</h2>
-              <p className="text-green-400 text-lg font-semibold mb-4">₦{supportAmount ? Number(supportAmount).toLocaleString() : "0"}</p>
               <p className="text-gray-300 mb-6">Your support means the world to <strong className="text-purple-400">{creator?.displayName || creator?.username}</strong>! 💜</p>
-              <p className="text-gray-500 text-sm mb-6">The creator will verify your payment shortly.</p>
               <div className="flex gap-3">
                 <button onClick={() => setShowSuccessPopup(false)} className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-medium">Close</button>
                 <button onClick={() => { setShowSuccessPopup(false); setShowPayment(true); }} className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-medium">Support Again 💜</button>
@@ -251,10 +240,4 @@ const CreatorPage = () => {
       </AnimatePresence>
 
       <div className="text-center pb-8">
-        <p className="text-gray-600 text-sm">Powered by <Link to="/" className="text-purple-500 hover:text-purple-400">TSB</Link> — The Support Button</p>
-      </div>
-    </div>
-  );
-};
-
 export default CreatorPage;
