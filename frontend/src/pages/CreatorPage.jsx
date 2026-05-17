@@ -157,13 +157,11 @@ const CreatorPage = () => {
 
             <div className="bg-gray-900/50 rounded-xl p-4 mb-4 text-center">
               <p className="text-gray-400 text-sm mb-1">To this OPay number:</p>
-              <p className="text-white font-bold text-2xl tracking-widest">{YOUR_OPAY_NUMBER}</p>
-              <p className="text-gray-400 text-sm mt-1">{YOUR_OPAY_NAME}</p>
+              <p className="text-white font-bold text-3xl tracking-widest cursor-pointer select-all hover:text-purple-400 transition-colors" onClick={() => { navigator.clipboard.writeText("YOUR_REAL_NUMBER"); alert("Number copied!"); }} title="Click to copy">{YOUR_OPAY_NUMBER}</p>
+              <p className="text-gray-400 text-sm mt-1"><span className="text-lg">{YOUR_OPAY_NAME}</span></p>
             </div>
 
             <div className="bg-gray-900/50 rounded-xl p-4 mb-4 text-center">
-              <p className="text-gray-400 text-sm mb-1">Reference (add as note):</p>
-              <p className="text-yellow-400 font-mono font-bold text-lg">{supportReference}</p>
             </div>
 
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4">
