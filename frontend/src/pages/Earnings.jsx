@@ -61,7 +61,7 @@ const Earnings = () => {
               <p className="text-sm text-gray-400 uppercase tracking-widest mb-3">
                 Recent Balance
               </p>
-              <p className="text-3xl font-bold text-white">₦0dollars</p>
+              <p className="text-3xl font-bold text-white">₦0</p>
               <p className="text-gray-500 mt-2">
                 Available balance ready for withdrawal.
               </p>
